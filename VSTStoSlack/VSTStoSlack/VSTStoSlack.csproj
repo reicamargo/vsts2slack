@@ -108,8 +108,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Usuario.cs" />
-    <Compile Include="Models\UsuariosRepository.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UsersRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
