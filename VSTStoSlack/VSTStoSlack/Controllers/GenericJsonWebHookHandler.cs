@@ -19,19 +19,19 @@ public class GenericJsonWebHookHandler : WebHookHandler
 
         if (context.Id == "v" && !string.IsNullOrEmpty(data["message"].ToString()))
         {
-            var usuarios = UsuariosRepository.GetUsuarios();
-            var mensagem = data["detailedMessage"]["text"].ToString();
-            var nomePortal = "VSTS - BOT";
+            var users = UsersRepository.GetUsers();
+            var message = data["detailedMessage"]["text"].ToString();
+            var boardName = "VSTS - BOT";
 
             if (!string.IsNullOrEmpty(data["resource"].ToString()))
-                nomePortal = string.Format("VSTS - {0}", data["resource"]["fields"]["System.TeamProject"].ToString());
+                boardName = string.Format("VSTS - {0}", data["resource"]["fields"]["System.TeamProject"].ToString());
 
-            foreach (var usuarioMencionado in usuarios)
+            foreach (var userMentions in users)
             {
-                if (mensagem.IndexOf(usuarioMencionado.NomeVSO) >= 0)
+                if (message.IndexOf(userMentions.VstsName) >= 0)
                 {
-                    mensagem = mensagem.Replace(usuarioMencionado.NomeVSO, usuarioMencionado.NomeSlack);
-                    EnviarAsync(usuarioMencionado, mensagem, nomePortal);
+                    message = message.Replace(userMentions.VstsName, userMentions.SlackName);
+                    SendAsync(userMentions, message, boardName);
                 }
             }
         }
@@ -39,13 +39,13 @@ public class GenericJsonWebHookHandler : WebHookHandler
         return Task.FromResult(true);
     }
 
-    private void EnviarAsync(Usuario usuarioMencionado, string mensagem, string nomePortal)
+    private void SendAsync(User userMentions, string message, string boardName)
     {
         var restClient = new RestSharp.RestClient(ConfigurationManager.AppSettings["WebHookUrlSlack"]);
         var request = new RestSharp.RestRequest(RestSharp.Method.POST);
 
         //Caso você queria enviar msg direto pra pessoa. Lembrando que vai como bot.
-        request.AddJsonBody(new { text = mensagem, channel = String.Format("@{0}",usuarioMencionado.NomeSlack), username = nomePortal });
+        request.AddJsonBody(new { text = message, channel = String.Format("@{0}",userMentions.SlackName), username = boardName });
 
         //Caso você queria enviar msg no canal com o mention é só passar o nome do canal em channel.
         //request.AddJsonBody(new { text = mensagem, channel = "ds-mobile-open" });

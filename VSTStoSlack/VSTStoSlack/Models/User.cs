@@ -5,9 +5,9 @@ using System.Web;
 
 namespace VSTStoSlack.Models
 {
-    public class Usuario
+    public class User
     {
-        public string NomeVSO { get; set; }
-        public string NomeSlack { get; set; }
+        public string VstsName { get; set; }
+        public string SlackName { get; set; }
     }
 }
