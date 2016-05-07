@@ -17,7 +17,7 @@ public class GenericJsonWebHookHandler : WebHookHandler
     {
         JObject data = context.GetDataOrDefault<JObject>();
 
-        if (context.Id == "v" && !string.IsNullOrEmpty(data["message"].ToString()))
+        if (context.Id == "v" && !string.IsNullOrEmpty(data["detailedMessage"].ToString()))
         {
             var users = UsersRepository.GetUsers();
             var message = data["detailedMessage"]["text"].ToString();
